@@ -48,6 +48,9 @@ public class TaskRepository extends AbstractRepository<ResponseData>{
                 taskModel.setUserId(result.getInt("user_id"));
                 taskModel.setJobId(result.getInt("job_id"));
                 taskModel.setStatusId(result.getInt("status_id"));
+                taskModel.setUserEmail(result.getString("user_email"));
+                taskModel.setJobName(result.getString("job_name"));
+                taskModel.setStatusName(result.getString("status_name"));
                 taskModelList.add(taskModel);
             }
 
@@ -101,6 +104,9 @@ public class TaskRepository extends AbstractRepository<ResponseData>{
                 taskModel.setUserId(result.getInt("user_id"));
                 taskModel.setJobId(result.getInt("job_id"));
                 taskModel.setStatusId(result.getInt("status_id"));
+                taskModel.setUserEmail(result.getString("user_email"));
+                taskModel.setJobName(result.getString("job_name"));
+                taskModel.setStatusName(result.getString("status_name"));
             }
 
             ResponseData responseData = new ResponseData();
