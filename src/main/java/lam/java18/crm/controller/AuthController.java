@@ -2,10 +2,8 @@ package lam.java18.crm.controller;
 
 import com.google.gson.Gson;
 import lam.java18.crm.model.ResponseData;
-import lam.java18.crm.model.TaskModel;
 import lam.java18.crm.model.UserModel;
 import lam.java18.crm.service.impl.AuthServiceImpl;
-import lam.java18.crm.service.impl.UserServiceImpl;
 import lam.java18.crm.utils.UrlUtils;
 
 import javax.servlet.ServletException;
@@ -19,7 +17,11 @@ import java.io.PrintWriter;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-@WebServlet(urlPatterns = {UrlUtils.URL_LOGIN, UrlUtils.URL_REGISTER, UrlUtils.URL_LOGOUT})
+@WebServlet(name = "auth" ,urlPatterns = {
+        UrlUtils.URL_LOGIN,
+        UrlUtils.URL_REGISTER,
+        UrlUtils.URL_LOGOUT
+})
 public class AuthController extends HttpServlet {
     private Gson gson;
     private AuthServiceImpl authServiceImpl;
@@ -35,13 +37,13 @@ public class AuthController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         switch (req.getServletPath()) {
             case UrlUtils.URL_LOGIN: {
-                processRegister(req, resp);
-            }
-            case UrlUtils.URL_REGISTER: {
                 processLogin(req, resp);
             }
+            case UrlUtils.URL_REGISTER: {
+                processRegister(req, resp);
+            }
             case UrlUtils.URL_LOGOUT: {
-                req.getSession().invalidate();
+                processLogout(req, resp);
             }
         }
     }
@@ -53,7 +55,9 @@ public class AuthController extends HttpServlet {
         if (responseData.isSuccess()) {
             req.getSession().setAttribute("currentUser", responseData.getData());
         }
+
         String json = gson.toJson(responseData);
+
         handleSendResp.accept(resp, json);
     }
 
@@ -69,17 +73,31 @@ public class AuthController extends HttpServlet {
         handleSendResp.accept(resp, json);
     }
 
+    private void processLogout(HttpServletRequest req, HttpServletResponse resp) {
+        ResponseData responseData = new ResponseData();
+
+        if (req.getSession().getAttribute("currentUser") != null) {
+            req.getSession().invalidate();
+            responseData.setSuccess(true);
+            responseData.setMessages("Log out success");
+        }
+
+        String json = gson.toJson(responseData);
+
+        handleSendResp.accept(resp, json);
+    }
+
     private BiConsumer<HttpServletResponse, String> handleSendResp = (resp, jsonString) -> {
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
         PrintWriter printWriter = null;
+
         try {
             printWriter = resp.getWriter();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         printWriter.print(jsonString);
-        printWriter.flush();
     };
 
     private Function<HttpServletRequest, UserModel> createModel = (req) -> {

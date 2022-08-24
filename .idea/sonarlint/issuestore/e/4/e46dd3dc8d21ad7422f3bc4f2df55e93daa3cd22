@@ -1,0 +1,11 @@
+
+g	java:S112P"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ8ë…¦¬0
+g	java:S112a"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ8ó…¦¬0
+ƒ
+java:S1488^"aImmediately return this expression instead of assigning it to the temporary variable "roleModel".(™×Ãøÿÿÿÿ8™Ÿ…¦¬0
+S
+java:S1611V"1Remove the parentheses around the "req" parameter(®ìêûÿÿÿÿ8Ğ¢…¦¬0
+u
+java:S2226I"XRemove this misleading mutable servlet instance field or make it "static" and/or "final"(›êóæ8å¢…¦¬0
+z
+java:S2226V"XRemove this misleading mutable servlet instance field or make it "static" and/or "final"(®ìêûÿÿÿÿ8ç¢…¦¬0

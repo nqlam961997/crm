@@ -20,6 +20,7 @@ public class AuthServiceImpl implements AuthService {
         if (!isValidUser(theModel.getEmail(), theModel.getPassword())) {
             ResponseData responseData = new ResponseData();
             responseData.setMessages("The email or password is not correct! Please try again");
+
             return responseData;
         }
         return userRepository.findByEmailAndPassword(theModel.getEmail(), theModel.getPassword());

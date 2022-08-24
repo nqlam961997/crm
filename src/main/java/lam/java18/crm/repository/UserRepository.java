@@ -1,7 +1,6 @@
 package lam.java18.crm.repository;
 
 import lam.java18.crm.model.ResponseData;
-import lam.java18.crm.model.RoleModel;
 import lam.java18.crm.model.UserModel;
 
 import java.sql.PreparedStatement;
@@ -9,10 +8,21 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserRepository extends AbstractRepository<ResponseData>{
+public class UserRepository extends AbstractRepository<ResponseData> {
     public ResponseData getAll() {
         return executeQuery(connection -> {
-            String query = "select * from users";
+            String query =
+                    "select users.id," +
+                            "users.email," +
+                            "users.password," +
+                            "users.fullname," +
+                            "users.avatar," +
+                            "roles.id as role_id," +
+                            "roles.name as role_name," +
+                            "roles.description as role_description " +
+                            "from users " +
+                    "inner join roles " +
+                    "on users.role_id = roles.id";
 
             PreparedStatement statement = connection.prepareStatement(query);
 
@@ -28,6 +38,8 @@ public class UserRepository extends AbstractRepository<ResponseData>{
                 userModel.setFullName(result.getString("fullname"));
                 userModel.setAvatar(result.getString("avatar"));
                 userModel.setRoleId(result.getInt("role_id"));
+                userModel.setRoleName(result.getString("role_name"));
+                userModel.setRoleDescription(result.getString("role_description"));
                 userModelList.add(userModel);
             }
 
@@ -47,7 +59,17 @@ public class UserRepository extends AbstractRepository<ResponseData>{
 
     public ResponseData getOne(int id) {
         return executeQuerySingle(connection -> {
-            String query = "select * from users where id =?";
+            String query = "select users.id," +
+                    "users.email," +
+                    "users.password," +
+                    "users.fullname," +
+                    "users.avatar," +
+                    "roles.id as role_id," +
+                    "roles.name as role_name," +
+                    "roles.description as role_description " +
+                    "from users " +
+                    "inner join roles " +
+                    "on users.role_id = roles.id where users.id = ?;";
 
             PreparedStatement statement = connection.prepareStatement(query);
 
@@ -64,6 +86,8 @@ public class UserRepository extends AbstractRepository<ResponseData>{
                 userModel.setFullName(result.getString("fullname"));
                 userModel.setAvatar(result.getString("avatar"));
                 userModel.setRoleId(result.getInt("role_id"));
+                userModel.setRoleName(result.getString("role_name"));
+                userModel.setRoleDescription(result.getString("role_description"));
             }
 
             ResponseData responseData = new ResponseData();
@@ -128,7 +152,6 @@ public class UserRepository extends AbstractRepository<ResponseData>{
         } else {
             responseData.setMessages("The user has been added");
             responseData.setSuccess(true);
-            responseData.setData(userModel);
         }
 
         return responseData;
@@ -150,6 +173,7 @@ public class UserRepository extends AbstractRepository<ResponseData>{
 
             return statement.executeUpdate();
         });
+
         ResponseData responseData = new ResponseData();
 
         if (result == 0) {
@@ -165,7 +189,16 @@ public class UserRepository extends AbstractRepository<ResponseData>{
 
     public ResponseData findByEmailAndPassword(String email, String password) {
         return executeQuerySingle(connection -> {
-            String query = "select * from users where email = ? and password = ?";
+            String query = "select users.id," +
+                    "users.email," +
+                    "users.fullname," +
+                    "users.avatar," +
+                    "roles.id as role_id," +
+                    "roles.name as role_name," +
+                    "roles.description as role_description " +
+                    "from users " +
+                    "inner join roles " +
+                    "on users.role_id = roles.id where users.email = ? and users.password = ?;";;
 
             PreparedStatement statement = connection.prepareStatement(query);
 
@@ -179,13 +212,15 @@ public class UserRepository extends AbstractRepository<ResponseData>{
             if (result.next()) {
                 userModel.setId(result.getInt("id"));
                 userModel.setEmail(result.getString(("email")));
-                userModel.setPassword(result.getString("password"));
                 userModel.setFullName(result.getString("fullname"));
                 userModel.setAvatar(result.getString("avatar"));
                 userModel.setRoleId(result.getInt("role_id"));
+                userModel.setRoleName(result.getString("role_name"));
+                userModel.setRoleDescription(result.getString("role_description"));
             }
 
             ResponseData responseData = new ResponseData();
+
 
             if (userModel.getId() > 0) {
                 responseData.setData(userModel);
@@ -214,11 +249,6 @@ public class UserRepository extends AbstractRepository<ResponseData>{
 
             if (result.next()) {
                 userModel.setId(result.getInt("id"));
-                userModel.setEmail(result.getString(("email")));
-                userModel.setPassword(result.getString("password"));
-                userModel.setFullName(result.getString("fullname"));
-                userModel.setAvatar(result.getString("avatar"));
-                userModel.setRoleId(result.getInt("role_id"));
             }
 
             ResponseData responseData = new ResponseData();

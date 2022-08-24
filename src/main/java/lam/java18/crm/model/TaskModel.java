@@ -13,6 +13,9 @@ public class TaskModel {
     private int userId;
     private int jobId;
     private int statusId;
+    private String userEmail;
+    private String jobName;
+    private String statusName;
 
     public TaskModel() {
         this.startDate = LocalDateTime.now();

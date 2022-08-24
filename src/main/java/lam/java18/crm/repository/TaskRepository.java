@@ -15,7 +15,23 @@ import java.util.List;
 public class TaskRepository extends AbstractRepository<ResponseData>{
     public ResponseData getAll() {
         return executeQuery(connection -> {
-            String query = "select * from tasks";
+            String query = "select tasks.id," +
+                    "tasks.name," +
+                    "tasks.start_date," +
+                    "tasks.end_date," +
+                    "tasks.user_id," +
+                    "users.email as user_email," +
+                    "tasks.job_id," +
+                    "jobs.name as job_name," +
+                    "tasks.status_id," +
+                    "status.name as status_name " +
+                    "from tasks " +
+                    "inner join users " +
+                    "on tasks.user_id = users.id " +
+                    "inner join jobs " +
+                    "on tasks.job_id = jobs.id " +
+                    "inner join status " +
+                    "on tasks.status_id = status.id;";
 
             PreparedStatement statement = connection.prepareStatement(query);
 
@@ -51,7 +67,23 @@ public class TaskRepository extends AbstractRepository<ResponseData>{
 
     public ResponseData getOne(int id) {
         return executeQuerySingle(connection -> {
-            String query = "select * from tasks where id =?";
+            String query = "select tasks.id," +
+                    "tasks.name," +
+                    "tasks.start_date," +
+                    "tasks.end_date," +
+                    "tasks.user_id," +
+                    "users.email as user_email," +
+                    "tasks.job_id," +
+                    "jobs.name as job_name," +
+                    "tasks.status_id," +
+                    "status.name as status_name " +
+                    "from tasks " +
+                    "inner join users " +
+                    "on tasks.user_id = users.id " +
+                    "inner join jobs " +
+                    "on tasks.job_id = jobs.id " +
+                    "inner join status " +
+                    "on tasks.status_id = status.id where tasks.id = ?;";
 
             PreparedStatement statement = connection.prepareStatement(query);
 
@@ -142,7 +174,14 @@ public class TaskRepository extends AbstractRepository<ResponseData>{
     public ResponseData update(TaskModel taskModel) {
         int result = executeUpdate(connection -> {
             String query =
-                    "update users set email = ?, password = ?, fullname = ?, avatar = ?, role_id = ? where id = ?";
+                    "update users " +
+                            "set name = ?," +
+                            "start_date = ?," +
+                            "end_date = ?," +
+                            "user_id = ?," +
+                            "job_id = ?," +
+                            "status_id = ? " +
+                            "where id = ?";
 
             PreparedStatement statement = connection.prepareStatement(query);
 
@@ -152,6 +191,7 @@ public class TaskRepository extends AbstractRepository<ResponseData>{
             statement.setInt(4, taskModel.getUserId());
             statement.setInt(5, taskModel.getJobId());
             statement.setInt(6, taskModel.getStatusId());
+            statement.setInt(7, taskModel.getId());
 
             return statement.executeUpdate();
         });

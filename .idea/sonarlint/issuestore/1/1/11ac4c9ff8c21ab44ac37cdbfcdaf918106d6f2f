@@ -1,0 +1,5 @@
+
+
+java:S1104"]Make statusServiceImpl a static final constant or non-public and provide accessors if needed.(ÁÔØ‹ÿÿÿÿÿ8½Ş…·¬0
+Y
+java:S1444"7Make this "public static statusServiceImpl" field final(ÁÔØ‹ÿÿÿÿÿ8½Ş…·¬0

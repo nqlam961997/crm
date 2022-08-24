@@ -10,4 +10,6 @@ public class UserModel {
     private String fullName;
     private String avatar;
     private int roleId;
+    private String roleName;
+    private String roleDescription;
 }
